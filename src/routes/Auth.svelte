@@ -60,8 +60,6 @@
 
       console.log('Redirect URL:', redirectURL);
 
-
-
     } catch (error) {
       console.error(error)
     }
