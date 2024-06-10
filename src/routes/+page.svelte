@@ -1,4 +1,5 @@
 <script>
+  import Auth from './Auth.svelte'
 </script>
 
 <svelte:head>
@@ -8,6 +9,7 @@
 
 <section>
 	<h1>Hallo!</h1>
+	<Auth />
 </section>
 
 <style>
@@ -22,6 +24,4 @@
 	h1 {
 		width: 100%;
 	}
-
-
 </style>
