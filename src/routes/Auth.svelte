@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { account, ID } from '$lib/appwrite'
+  import { account, ID, OAuthProvider } from '$lib/appwrite'
   import { page } from '$app/stores'
 
   let email = ''
-
   let redirectURL: string;
 
   $: redirectURL = $page.url.href;
@@ -13,12 +12,20 @@
   let userIsLoggedIn = false
   let isNewUser = false
 
-  const loginUser = async (e: Event) => {
+  const loginUserMagicURL = async (e: Event) => {
     e.preventDefault()
 
     try {
       const token = await account.createMagicURLToken(ID.unique(), email.trim(), redirectURL)
       console.log(token)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const loginUserOAuth = async (provider: OAuthProvider) => {
+    try {
+      account.createOAuth2Session(provider, redirectURL)
     } catch (error) {
       console.error(error)
     }
@@ -74,10 +81,12 @@
 {#if !userIsLoggedIn}
   <section>
     <h1>Login or Register</h1>
-    <form on:submit={loginUser}>
+    <form on:submit={loginUserMagicURL}>
       <input type="email" placeholder="Email" bind:value={email} />
       <button type="submit">Submit</button>
     </form>
+    <p>OR</p>
+    <button on:click={() => loginUserOAuth(OAuthProvider.Google)}>Login with Google</button>
   </section>
 {/if}
 
