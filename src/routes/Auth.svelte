@@ -49,8 +49,7 @@
       console.log('account:', account);
 
       if (secret && userId) {
-        console.log('userId ===>', userId)
-        user = await account.createSession(secret, userId)
+        user = await account.createSession(userId, secret)
         console.log(user)
       } else {
         user = await account.get()
