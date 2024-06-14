@@ -61,11 +61,6 @@
         userIsLoggedIn = false
       }
 
-      console.log(user)
-      console.log('Is new user:', isNewUser)
-
-      console.log('Redirect URL:', redirectURL);
-
     } catch (error) {
       console.error(error)
     }
