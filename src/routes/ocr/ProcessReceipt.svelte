@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { account } from '$lib/appwrite';
   import { createWorker } from 'tesseract.js';
+  import { Configuration, OpenAIApi } from 'openai';
 
   let user = null;
   let receiptData = null;
@@ -30,33 +31,60 @@
     return parseReceiptText(text);
   }
 
-  function parseReceiptText(text) {
-    const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+  async function parseReceiptText(text) {
+  const configuration = new Configuration({
+    apiKey: '',
+  });
+  const openai = new OpenAIApi(configuration);
 
-    let date = null;
-    let storeName = null;
-    const items = [];
-    const datePattern = /\b\d{2}\/\d{2}\/\d{4}\b/;
-    const pricePattern = /\b\d+\.\d{2}\b/;
+  const prompt = `
+  Parse the following receipt text and return a structured JSON format with
+  store name, address, telephone, items (with description, price, and currency), total (with currency),
+  payment method, transaction ID, date and time, tax total.
 
-    lines.forEach(line => {
-      if (!date && datePattern.test(line)) {
-        date = line.match(datePattern)[0];
-      } else if (!storeName && /store|shop|mart|market|retail/i.test(line)) {
-        storeName = line;
-      } else if (pricePattern.test(line)) {
-        const parts = line.split(pricePattern);
-        const itemName = parts[0].trim();
-        const itemPrice = line.match(pricePattern)[0];
-        items.push({ name: itemName, price: itemPrice });
+  Receipt Text:
+  """
+  ${text}
+  """
+
+  Expected JSON structure:
+  {
+    "store_name": "Store Name",
+    "store_address": "Store Address",
+    "telephone": "Store Telephone",
+    "date_time": "Date Time", // format: YYYY-MM-DD THH:MM:SS
+    "items": [
+      {
+        "description": "Item Description",
+        "price": Item Price,
+        "currency": "Currency"
       }
-    });
+    ],
+    "total": {
+      "amount": Total Amount,
+      "currency": "Currency"
+    },
+    "payment_method": "Payment Method",
+    "transaction_id": "Transaction ID",
+    "tax_total": "Tax Total Amount"
+  }
+  `;
 
-    return {
-      date: date || "Date not found",
-      storeName: storeName || "Store name not found",
-      items: items.length > 0 ? items : "No items found"
-    };
+    try {
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: prompt,
+        max_tokens: 1000
+      });
+
+      const jsonResponse = JSON.parse(response.data.choices[0].text.trim());
+      return jsonResponse;
+    } catch (error) {
+      console.error("Error parsing receipt text:", error);
+      return {
+        error: "Failed to parse receipt text. Please check the input and try again."
+      };
+    }
   }
 
   async function handleSubmit(event) {
