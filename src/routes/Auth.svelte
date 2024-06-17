@@ -1,10 +1,10 @@
-<script lang="ts">
+<script>
   import { onMount } from 'svelte'
   import { account, ID, OAuthProvider } from '$lib/appwrite'
   import { page } from '$app/stores'
 
   let email = ''
-  let redirectURL: string;
+  let redirectURL = '';
 
   $: redirectURL = $page.url.href;
 
@@ -12,7 +12,7 @@
   let userIsLoggedIn = false
   let isNewUser = false
 
-  const loginUserMagicURL = async (e: Event) => {
+  const loginUserMagicURL = async (e) => {
     e.preventDefault()
 
     try {
@@ -23,7 +23,7 @@
     }
   }
 
-  const loginUserOAuth = async (provider: OAuthProvider) => {
+  const loginUserOAuth = async (provider) => {
     try {
       account.createOAuth2Session(provider, redirectURL)
     } catch (error) {
