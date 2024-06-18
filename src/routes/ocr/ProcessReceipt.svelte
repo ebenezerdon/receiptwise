@@ -135,51 +135,51 @@
     <h2>Edit Receipt Data</h2>
     <form on:submit={handleSave}>
       <div class="form-group">
-        <label>Store Name:</label>
-        <input type="text" bind:value={editedReceiptData.store_name} />
+        <label for="storeName">Store Name:</label>
+        <input type="text" bind:value={editedReceiptData.store_name} id="storeName" />
       </div>
       <div class="form-group">
-        <label>Store Address:</label>
-        <input type="text" bind:value={editedReceiptData.store_address} />
+        <label for="storeAddress">Store Address:</label>
+        <input type="text" bind:value={editedReceiptData.store_address} id="storeAddress" />
       </div>
       <div class="form-group">
-        <label>Telephone:</label>
-        <input type="text" bind:value={editedReceiptData.telephone} />
+        <label for="telephone">Telephone:</label>
+        <input type="text" bind:value={editedReceiptData.telephone} id="telephone" />
       </div>
       <div class="form-group">
-        <label>Date Time:</label>
-        <input type="text" bind:value={editedReceiptData.date_time} />
+        <label for="dateTime">Date Time:</label>
+        <input type="text" bind:value={editedReceiptData.date_time} id="dateTime" />
       </div>
       <div class="form-group">
-        <label>Items:</label>
+        <label for='items'>Items:</label>
         {#each editedReceiptData.items as item, index}
           <div class="item-group">
-            <label>Description:</label>
-            <input type="text" value={item.description} on:input={event => handleInputChange(event, index, 'description')} />
-            <label>Price:</label>
-            <input type="number" value={item.price} on:input={event => handleInputChange(event, index, 'price')} />
+            <label for="description">Description:</label>
+            <input type="text" value={item.description} on:input={event => handleInputChange(event, index, 'description')} id="description" />
+            <label for="price">Price:</label>
+            <input type="number" value={item.price} on:input={event => handleInputChange(event, index, 'price')} id="price" />
           </div>
         {/each}
       </div>
       <div class="form-group">
-        <label>Total Amount:</label>
-        <input type="number" bind:value={editedReceiptData.total.amount} />
-        <label>Currency:</label>
-        <input type="text" bind:value={editedReceiptData.total.currency} />
+        <label for="totalAmount">Total Amount:</label>
+        <input type="number" bind:value={editedReceiptData.total.amount} id="totalAmount" />
+        <label for="currency">Currency:</label>
+        <input type="text" bind:value={editedReceiptData.total.currency} id="currency" />
       </div>
       <div class="form-group">
-        <label>Payment Method:</label>
-        <input type="text" bind:value={editedReceiptData.payment_method} />
+        <label for="paymentMethod">Payment Method:</label>
+        <input type="text" bind:value={editedReceiptData.payment_method} id="paymentMethod" />
       </div>
       <div class="form-group">
-        <label>Transaction ID:</label>
-        <input type="text" bind:value={editedReceiptData.transaction_id} />
+        <label for="transactionId">Transaction ID:</label>
+        <input type="text" bind:value={editedReceiptData.transaction_id} id="transactionId" />
       </div>
       <div class="form-group">
-        <label>Tax Total Amount:</label>
-        <input type="number" bind:value={editedReceiptData.tax_total.amount} />
-        <label>Currency:</label>
-        <input type="text" bind:value={editedReceiptData.tax_total.currency} />
+        <label for="taxTotalAmount">Tax Total Amount:</label>
+        <input type="number" bind:value={editedReceiptData.tax_total.amount} id="taxTotalAmount" />
+        <label for="taxCurrency">Currency:</label>
+        <input type="text" bind:value={editedReceiptData.tax_total.currency} id="taxCurrency" />
       </div>
       <button type="submit">Save</button>
     </form>
