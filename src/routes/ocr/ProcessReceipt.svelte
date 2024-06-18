@@ -6,6 +6,8 @@
   let user = null;
   let receiptData = null;
   let editedReceiptData = null;
+  let isProcessing = false;
+  let isParsing = false;
 
   onMount(async () => {
     try {
@@ -16,6 +18,7 @@
   });
 
   async function processReceipt(imageFile) {
+    isProcessing = true;
     const worker = await createWorker('eng', 1, {
       logger: m => console.log(m),
     });
@@ -23,11 +26,13 @@
     const { data: { text } } = await worker.recognize(imageFile);
     console.log(text);
     await worker.terminate();
+    isProcessing = false;
 
     return await parseReceiptText(text);
   }
 
   async function parseReceiptText(text) {
+    isParsing = true;
     const prompt = `
       Parse the following receipt text and return a structured JSON format with
       store name, address, telephone, items (with description, price, and currency), total (with currency),
@@ -95,6 +100,8 @@
       return {
         error: "Failed to parse receipt text. Please check the input and try again."
       };
+    } finally {
+      isParsing = false;
     }
   }
 
@@ -131,7 +138,15 @@
     <button type="submit">Submit</button>
   </form>
 
-  {#if receiptData}
+  {#if isProcessing}
+    <p>Whipping up the pixels...</p>
+  {/if}
+
+  {#if isParsing}
+    <p>Magic in progress...</p>
+  {/if}
+
+  {#if receiptData && !isProcessing && !isParsing}
     <h2>Edit Receipt Data</h2>
     <form on:submit={handleSave}>
       <div class="form-group">
@@ -232,5 +247,10 @@
   label {
     display: block;
     margin-top: 10px;
+  }
+
+  p {
+    font-size: 1.2em;
+    color: #555;
   }
 </style>
