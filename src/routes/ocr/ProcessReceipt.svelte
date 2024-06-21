@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { account } from '$lib/appwrite';
+  import { account, db } from '$lib/appwrite';
   import { createWorker } from 'tesseract.js';
 
   let user = null;
@@ -19,9 +19,7 @@
 
   async function processReceipt(imageFile) {
     isProcessing = true;
-    const worker = await createWorker('eng', 1, {
-      logger: m => console.log(m),
-    });
+    const worker = await createWorker('eng', 1);
 
     const { data: { text } } = await worker.recognize(imageFile);
     console.log(text);
