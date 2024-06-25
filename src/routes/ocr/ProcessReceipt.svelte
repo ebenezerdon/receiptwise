@@ -50,20 +50,15 @@
         "items": [
           {
             "description": "Item Description",
-            "price": Item Price,
+            "price": Item Price as Float,
             "currency": "Currency"
           }
         ],
-        "total": {
-          "amount": Total Amount,
-          "currency": "Currency"
-        },
+        "total_amount": Total Amount as Float,
+        "currency": "Currency",
         "payment_method": "Payment Method",
         "transaction_id": "Transaction ID",
-        "tax_total": {
-          "amount": Tax Total Amount,
-          "currency": "Currency"
-        },
+        "tax_total": Tax Total Amount as Float,
       }
     `;
 
@@ -121,6 +116,23 @@
     event.preventDefault();
     // Save the editedReceiptData to the database
     console.log('Saving edited receipt data to database:', editedReceiptData);
+    await db.receipts.create({
+      user_id: user.$id,
+      store_name: editedReceiptData.store_name,
+      store_address: editedReceiptData.store_address,
+      telephone: editedReceiptData.telephone,
+      date_time: editedReceiptData.date_time,
+      items: editedReceiptData.items,
+      total_amount: editedReceiptData.total_amount,
+      payment_method: editedReceiptData.payment_method,
+      transaction_id: editedReceiptData.transaction_id,
+      tax_total: editedReceiptData.tax_total,
+      currency: editedReceiptData.currency
+    }).then(response => {
+      console.log('Receipt saved:', response);
+    }).catch(error => {
+      console.error('Error saving receipt:', error);
+    })
   }
 </script>
 
@@ -166,19 +178,19 @@
       <div class="form-group">
         <label for='items'>Items:</label>
         {#each editedReceiptData.items as item, index}
-          <div class="item-group">
+            <div class="item-group">
             <label for="description">Description:</label>
             <input type="text" value={item.description} on:input={event => handleInputChange(event, index, 'description')} id="description" />
             <label for="price">Price:</label>
-            <input type="number" value={item.price} on:input={event => handleInputChange(event, index, 'price')} id="price" />
+            <input type="number" step="any" value={item.price} on:input={event => handleInputChange(event, index, 'price')} id="price" />
           </div>
         {/each}
       </div>
       <div class="form-group">
         <label for="totalAmount">Total Amount:</label>
-        <input type="number" bind:value={editedReceiptData.total.amount} id="totalAmount" />
+        <input type="number" step="any" bind:value={editedReceiptData.total_amount} id="totalAmount" />
         <label for="currency">Currency:</label>
-        <input type="text" bind:value={editedReceiptData.total.currency} id="currency" />
+        <input type="text" bind:value={editedReceiptData.currency} id="currency" />
       </div>
       <div class="form-group">
         <label for="paymentMethod">Payment Method:</label>
@@ -190,9 +202,7 @@
       </div>
       <div class="form-group">
         <label for="taxTotalAmount">Tax Total Amount:</label>
-        <input type="number" bind:value={editedReceiptData.tax_total.amount} id="taxTotalAmount" />
-        <label for="taxCurrency">Currency:</label>
-        <input type="text" bind:value={editedReceiptData.tax_total.currency} id="taxCurrency" />
+        <input type="number" step="any" bind:value={editedReceiptData.tax_total} id="taxTotalAmount" />
       </div>
       <button type="submit">Save</button>
     </form>

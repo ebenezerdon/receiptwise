@@ -1,15 +1,13 @@
 import { ID } from "appwrite"
 import { databases } from "./index.js"
 
-const { VITE_DATABASE_ID, VITE_NOTES_COLLECTION_ID } = import.meta.env
-
 export const db = {}
 
 const collections = [
   {
-    dbId: VITE_DATABASE_ID,
-    id: VITE_NOTES_COLLECTION_ID,
-    name: "notes",
+    dbId: "receiptwise",
+    id: "receipts",
+    name: "receipts",
   },
 ]
 
