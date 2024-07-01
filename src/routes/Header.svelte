@@ -20,7 +20,7 @@
 				<a href="/">Home</a>
 			</li>
 			<li aria-current={$page.url.pathname === '/ocr' ? 'page' : undefined}>
-				<a href="/ocr">Add Receipt</a>
+				<a href="/ocr">Receipts</a>
 			</li>
 			<li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
 				<a href="/about">About</a>
