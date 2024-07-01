@@ -1,5 +1,6 @@
 <script>
   import ProcessReceipt from './ProcessReceipt.svelte'
+  import ViewReceipts from './ViewReceipts.svelte'
 </script>
 
 <svelte:head>
@@ -10,6 +11,7 @@
 <section>
 	<h1>Receipts!</h1>
 	<ProcessReceipt />
+	<ViewReceipts />
 </section>
 
 <style>

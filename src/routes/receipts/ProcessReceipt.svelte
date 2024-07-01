@@ -138,7 +138,7 @@
 
 <svelte:head>
   <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+  <meta name="description" content="Process your shopping receipts" />
 </svelte:head>
 
 <section>
