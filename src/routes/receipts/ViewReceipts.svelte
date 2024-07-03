@@ -3,24 +3,20 @@
   import { account, db } from '$lib/appwrite';
 
   let receipts = [];
-  let uniqueStores = []
+  let uniqueStores = [];
 
   onMount(async () => {
     try {
-      await db.receipts.list()
-        .then((data) => {
-          receipts = data.documents || [];
-          receipts.forEach((receipt) => {
-            uniqueStores.push(receipt.store_name);
-          });
-          uniqueStores = Array.from(new Set(uniqueStores));
-        });
-      console.log('==receipts==>', receipts);
-      console.log('==uniqueStores==>', Array.from(uniqueStores));
+      const { documents } = await db.receipts.list();
+      receipts = documents || [];
     } catch (error) {
       console.error(error);
     }
   });
+
+  $: {
+    uniqueStores = Array.from(new Set(receipts.map(receipt => receipt.store_name)));
+  }
 </script>
 
 <svelte:head>
