@@ -1,10 +1,8 @@
 <script>
   import { onMount } from 'svelte';
-  import { account, db } from '$lib/appwrite';
-  import { onDestroy } from 'svelte';
+  import { db } from '$lib/appwrite';
 
   let receipts = [];
-  let uniqueStores = [];
   let selectedReceipt = null;
 
   onMount(async () => {
@@ -16,10 +14,13 @@
     }
   });
 
-  $: uniqueStores = Array.from(new Set(receipts.map(receipt => receipt.store_name)));
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
 
-  function showReceiptDetails(store_name) {
-    selectedReceipt = receipts.find(receipt => receipt.store_name === store_name);
+  function showReceiptDetails(store_name, date_time) {
+    selectedReceipt = receipts.find(receipt => receipt.store_name === store_name && receipt.date_time === date_time);
     document.addEventListener('keydown', handleKeydown);
   }
 
@@ -49,9 +50,11 @@
 <section>
   <h1>View Your Receipts</h1>
   <ul>
-    {#each uniqueStores as store_name}
+    {#each receipts as receipt}
       <li>
-        <button on:click={() => showReceiptDetails(store_name)}>{store_name}</button>
+        <button on:click={() => showReceiptDetails(receipt.store_name, receipt.date_time)}>
+          {receipt.store_name} - {formatDate(receipt.date_time)}
+        </button>
       </li>
     {/each}
   </ul>
@@ -64,7 +67,7 @@
       <h2>{selectedReceipt.store_name}</h2>
       <p><strong>Address:</strong> {selectedReceipt.store_address}</p>
       <p><strong>Telephone:</strong> {selectedReceipt.telephone}</p>
-      <p><strong>Date and Time:</strong> {selectedReceipt.date_time}</p>
+      <p><strong>Date and Time:</strong> {formatDate(selectedReceipt.date_time)}</p>
       <ul>
         {#each selectedReceipt.items as item}
           <li>
@@ -79,6 +82,7 @@
     </div>
   </div>
 {/if}
+
 
 <style>
   section {
