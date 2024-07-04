@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { account, db } from '$lib/appwrite';
+  import { account, db, storage, ID } from '$lib/appwrite';
   import { createWorker } from 'tesseract.js';
 
   let user = null;
@@ -8,6 +8,7 @@
   let editedReceiptData = null;
   let isProcessing = false;
   let isParsing = false;
+  let imageFile = null;
 
   onMount(async () => {
     try {
@@ -102,7 +103,7 @@
     event.preventDefault();
     const fileInput = event.target.querySelector('input[type="file"]');
     if (fileInput.files.length > 0) {
-      const imageFile = fileInput.files[0];
+      imageFile = fileInput.files[0];
       receiptData = await processReceipt(imageFile);
       editedReceiptData = JSON.parse(JSON.stringify(receiptData)); // Make a copy for editing
     }
@@ -129,9 +130,22 @@
       tax_total: editedReceiptData.tax_total,
       currency: editedReceiptData.currency
     }).then(response => {
-      console.log('Receipt saved:', response);
+      console.log('Receipt saved:', response)
+
+      const promise = storage.createFile(
+        '6686b035001d4abfd251',
+        ID.unique(),
+        imageFile
+    )
+
+    promise.then(function (response) {
+        console.log(response); // Success
+    }, function (error) {
+        console.log(error); // Failure
+    })
+
     }).catch(error => {
-      console.error('Error saving receipt:', error);
+      console.error('Error saving receipt:', error)
     })
   }
 </script>
