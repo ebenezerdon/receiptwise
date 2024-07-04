@@ -39,10 +39,6 @@
       closeModal();
     }
   }
-
-  onDestroy(() => {
-    document.removeEventListener('keydown', handleKeydown);
-  });
 </script>
 
 <svelte:head>
@@ -62,9 +58,9 @@
 </section>
 
 {#if selectedReceipt}
-  <div class="modal" on:click={handleOutsideClick}>
+  <div class="modal" on:click={handleOutsideClick} on:keypress={handleKeydown} aria-hidden="true">
     <div class="modal-content">
-      <span class="close" on:click={closeModal}>&times;</span>
+      <button class="close" on:click={closeModal}>&times;</button>
       <h2>{selectedReceipt.store_name}</h2>
       <p><strong>Address:</strong> {selectedReceipt.store_address}</p>
       <p><strong>Telephone:</strong> {selectedReceipt.telephone}</p>
